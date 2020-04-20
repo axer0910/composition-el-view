@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DynamicForm.tsx should render Dynamic Form 1`] = `
+<el-form-stub labelsuffix="" showmessage="true" validateonrulechange="true">
+  <div class="form-row">
+    <div class="form-col">
+      <el-form-item-stub label="测试表单项" inlinemessage="" showmessage="true">
+        <el-input-stub type="text" autocomplete="off" validateevent="true" placeholder="测试表单项"></el-input-stub>
+      </el-form-item-stub>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-col">
+      <el-form-item-stub label="测试下拉" inlinemessage="" showmessage="true">
+        <el-select-stub autocomplete="off" multiplelimit="0" placeholder="测试表单项" valuekey="value" popperappendtobody="true">
+          <el-option-stub value="1" label="下拉1"></el-option-stub>
+          <el-option-stub value="2" label="下拉2"></el-option-stub>
+        </el-select-stub>
+      </el-form-item-stub>
+    </div>
+  </div>
+</el-form-stub>
+`;
+
+exports[`DynamicForm.tsx should render jsx 1`] = `
+<el-form-stub labelsuffix="" showmessage="true" validateonrulechange="true">
+  <div class="form-row">
+    <div class="form-col">
+      <el-form-item-stub label="jsx下拉选项" inlinemessage="" showmessage="true">
+        <el-select-stub autocomplete="off" multiplelimit="0" placeholder="请选择" valuekey="value" popperappendtobody="true">
+          <option value="1">test1</option>
+          <option value="2">test2</option>
+        </el-select-stub>
+      </el-form-item-stub>
+    </div>
+  </div>
+</el-form-stub>
+`;
+
+exports[`DynamicForm.tsx should update Dynamic Form when prop change 1`] = `
+<el-form-stub labelsuffix="" showmessage="true" validateonrulechange="true">
+  <div class="form-row">
+    <div class="form-col">
+      <el-form-item-stub label="新的表单项" inlinemessage="" showmessage="true">
+        <el-input-stub type="text" validateevent="true" placeholder="新的表单项"></el-input-stub>
+      </el-form-item-stub>
+    </div>
+  </div>
+</el-form-stub>
+`;
