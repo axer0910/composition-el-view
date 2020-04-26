@@ -1,5 +1,5 @@
 import Vue, { Component } from 'vue';
-import App from './demo/Demo.vue'
+import App from './demo/FormViewDemo.vue'
 import VueCompositionApi from '@vue/composition-api';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';

@@ -3,15 +3,17 @@ import { computed, createElement, SetupContext } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '@/el-view/utils';
 import { defineComponent } from "@vue/composition-api";
 
+export type FormOption<T> = FormItem[] | FormItem[][];
+
 interface DynamicFormProps {
-  formOption: Array<FormItem> | Array<Array<FormItem>>,
-  formModel: {[key: string]: any}
+  formOption: FormItem[] | Array<FormItem[]>,
+  formModel: {[K in keyof object]: any}
 }
 
 export interface FormItem {
   formLabel: string,
   tagName: string,
-  modelKey: string,
+  modelKey: string
   required?: boolean,
   formRules?: Array<ValidateRule>,
   props?: { [key: string]: any },
@@ -141,7 +143,7 @@ const createFormItem = (formItem: FormItem) => {
 };
 
 // 如果是一维数组，那么以一列展示表单
-const normalizeForm = (formOptions: Array<FormItem>) => {
+const normalizeForm = (formOptions: FormItem[]) => {
   return formOptions.map((formItem) => [formItem]);
 };
 
@@ -161,9 +163,9 @@ export default defineComponent({
     componentProps = props;
     const _form = computed(() => {
       if (props.formOption.length > 0 && !Array.isArray(props.formOption[0])) {
-        return normalizeForm(props.formOption as Array<FormItem>);
+        return normalizeForm(props.formOption as FormItem[]);
       }
-      return props.formOption as Array<Array<FormItem>>;
+      return props.formOption as Array<FormItem[]>;
     });
 
     renderFn = (h: CreateElement) => (
