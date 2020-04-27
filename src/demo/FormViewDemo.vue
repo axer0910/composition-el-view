@@ -7,7 +7,6 @@
 <script lang="ts">
   import FormView from '@/el-view/FormView'
   import { useFromState } from '@/el-view/FormState';
-  import { ref } from '@vue/composition-api';
   import { FormItem } from '@/el-view/DynamicForm';
 
   export default {
@@ -15,12 +14,11 @@
       'form-view': FormView
     },
     setup: () => {
-      // todo 联动
       const formState = useFromState({
-        initFormModel: {
+        formModel: {
           isShowInput: 1
         },
-        formOptionGetter: () => {
+        formOption: () => {
           let form: FormItem[] = [
             {
               formLabel: '测试表单联动',
@@ -56,6 +54,7 @@
           return form;
         }
       });
+      formState.dyFormRef
       return {
         formState
       }

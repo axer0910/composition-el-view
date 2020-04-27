@@ -1,9 +1,9 @@
 import { CreateElement, VNode, VNodeChildren, VNodeData } from 'vue';
-import { computed, createElement, SetupContext } from '@vue/composition-api';
+import { computed, createElement, onMounted, SetupContext } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '@/el-view/utils';
 import { defineComponent } from "@vue/composition-api";
 
-export type FormOption<T> = FormItem[] | FormItem[][];
+export type FormOption = FormItem[] | FormItem[][];
 
 interface DynamicFormProps {
   formOption: FormItem[] | Array<FormItem[]>,
@@ -153,7 +153,7 @@ const createFormItemVNode = (compVNodeData: CompVNodeData) => {
 
 let renderFn: (h: CreateElement) => VNode;
 
-export default defineComponent({
+export const DynamicForm = defineComponent({
   props: {
     formOption: Array,
     formModel: Object
@@ -168,8 +168,12 @@ export default defineComponent({
       return props.formOption as Array<FormItem[]>;
     });
 
+    onMounted(() => {
+      console.warn('in dy form', setupContext.refs);
+    });
+
     renderFn = (h: CreateElement) => (
-      <el-form ref="dy_form">
+      <el-form ref="el_form">
         {
           _form.value.map((formOptionRow) => (
             <div class="form-row">
@@ -189,4 +193,4 @@ export default defineComponent({
   render(h: CreateElement) {
     return renderFn(h);
   }
-})
+});

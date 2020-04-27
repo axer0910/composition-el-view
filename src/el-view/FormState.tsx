@@ -1,4 +1,4 @@
-import { FormItem, FormOption } from '@/el-view/DynamicForm';
+import { DynamicForm, FormItem, FormOption } from '@/el-view/DynamicForm';
 import { computed, reactive, ref, Ref } from '@vue/composition-api';
 import { UnwrapRef } from '@vue/composition-api/dist/reactivity';
 
@@ -10,18 +10,26 @@ export interface FormViewState<T> {
   formModel: Ref<UnwrapRef<T>>,
   updateFormModel: (newModel: T) => void,
   setFormModel: (newModel: T) => void,
-  className: string
+  className: string,
+  setDynamicFormRef: (_dyFormRef: typeof DynamicForm) => void,
+  dyFormRef: typeof DynamicForm | null
 }
 
 export interface useFromStateArg<T> {
-  initFormModel: T,
-  formOptionGetter: () => FormOption<keyof T>,
+  formModel: T,
+  formOption: () => FormOption | FormOption
   className?: string
 }
 
-export function useFromState<T extends object>({initFormModel, formOptionGetter, className}: useFromStateArg<T>): FormViewState<T> {
+export function useFromState<T extends object>({formModel: initFormModel, formOption: formOptionGetter, className}: useFromStateArg<T>): FormViewState<T> {
   // formOption应该是一个computed属性,getter里面包含用户自定义的生成formOption逻辑（）
-  const formOption = computed(formOptionGetter);
+  let formOption;
+  let dyFormRef = null;
+  if (typeof formOptionGetter === 'function') {
+    formOption = computed(formOptionGetter);
+  } else {
+    formOption = computed(() => formOptionGetter);
+  }
   let formModel = { ...initFormModel };
 
   // 更新表单绑定数据
@@ -34,10 +42,14 @@ export function useFromState<T extends object>({initFormModel, formOptionGetter,
     formModel = { ...newModel};
   };
 
+  // 设置动态表单组件引用
+  const setDynamicFormRef = (_dyFormRef: any) => {
+    dyFormRef = _dyFormRef;
+  };
+
   // todo 表单验证（使用element ui自带）
   // todo 自定义提交按钮放在formview的slot里面
   // todo 怎么样对formModel进行watch，监听一个值并运行用户定义的回调（直接用watch？如何watch单个值）
-  // todo 设置DynmaicForm的ref在里面，方便进行elementui 的操作
   // 类型推导，传入的表单，数据能推导出一部分类型
 
   return {
@@ -45,6 +57,8 @@ export function useFromState<T extends object>({initFormModel, formOptionGetter,
     formModel: ref(reactive(formModel)),
     updateFormModel,
     setFormModel,
-    className: className ? className : ''
+    className: className ? className : '',
+    setDynamicFormRef,
+    dyFormRef
   };
 }

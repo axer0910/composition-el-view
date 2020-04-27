@@ -1,6 +1,6 @@
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, onMounted, ref, SetupContext } from '@vue/composition-api';
 import { CreateElement, VNode } from 'vue';
-import DynamicForm from '@/el-view/DynamicForm';
+import { DynamicForm } from '@/el-view/DynamicForm';
 import { FormViewState } from '@/el-view/FormState';
 
 interface FormViewProps<T> {
@@ -17,7 +17,14 @@ export default defineComponent({
   components: {
     'dy-form': DynamicForm
   },
-  setup: (props: FormViewProps<object>) =>  {
+  setup: (props: FormViewProps<object>, setupContext: SetupContext) =>  {
+    onMounted(() => {
+      setTimeout(() => {
+        const dyFormRef = setupContext.refs.dy_form;
+        console.warn('dy ref', setupContext.refs.dy_form);
+      }, 2000);
+      props.formState.setDynamicFormRef(setupContext.refs.dy_form as any)
+    });
     renderFn = (h: CreateElement) => (
       <el-form ref="dy_form">
         {

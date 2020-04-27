@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-  import DynamicForm, { FormItem } from '@/el-view/DynamicForm';
+  import { FormItem, DynamicForm } from '@/el-view/DynamicForm';
   import { createElement, reactive, ref } from '@vue/composition-api';
 
   export default {

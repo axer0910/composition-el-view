@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount, VueClass } from '@vue/test-utils';
-import DynamicForm, { FormItem } from '@/el-view/DynamicForm';
+import { FormItem, DynamicForm } from '@/el-view/DynamicForm';
 import VueCompositionApi, { reactive, Ref, ref } from '@vue/composition-api';
 import ElementUI from 'element-ui';
 import { registerHandlers } from '@/el-view/registerElDefaultHandlers';
