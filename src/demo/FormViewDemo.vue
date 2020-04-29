@@ -7,7 +7,8 @@
 <script lang="ts">
   import FormView from '@/el-view/FormView'
   import { useFromState } from '@/el-view/FormState';
-  import { FormItem } from '@/el-view/DynamicForm';
+  import { NullableFormItem } from '@/el-view/DynamicForm';
+  import { onMounted, watch } from '@vue/composition-api';
 
   export default {
     components: {
@@ -16,10 +17,11 @@
     setup: () => {
       const formState = useFromState({
         formModel: {
-          isShowInput: 1
+          isShowInput: 1,
+          testInput1: ''
         },
         formOption: () => {
-          let form: FormItem[] = [
+          const res: NullableFormItem[] = [
             {
               formLabel: '测试表单联动',
               tagName: 'el-select',
@@ -37,11 +39,9 @@
                   value: 1
                 }
               ]
-            }
-          ];
-          if (formState.formModel.value.isShowInput === 2) {
-            form = form.concat([
-              {
+            },
+            formState.formModel.value.isShowInput === 2
+              ? {
                 formLabel: '输入框1',
                 tagName: 'el-input',
                 modelKey: 'testInput1',
@@ -49,12 +49,23 @@
                   placeholder: ''
                 }
               }
-            ]);
-          }
-          return form;
+              : null
+          ];
+          return res;
         }
       });
-      formState.dyFormRef
+      onMounted(() => {
+        formState.getElFormRef().clearValidate();
+      });
+      watch(() => formState.formModel.value.isShowInput, () => {
+        console.warn('run change', formState.formModel.value.isShowInput);
+      });
+      watch(() => formState.formModel.value.testInput1, () => {
+        console.warn('run change2', formState.formModel.value.isShowInput);
+      });
+      watch(() => formState.formModel, () => {
+        console.warn('form model change', formState.formModel);
+      });
       return {
         formState
       }

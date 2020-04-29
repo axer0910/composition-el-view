@@ -1,12 +1,13 @@
 import { CreateElement, VNode, VNodeChildren, VNodeData } from 'vue';
-import { computed, createElement, onMounted, SetupContext } from '@vue/composition-api';
+import { computed, createElement, onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '@/el-view/utils';
 import { defineComponent } from "@vue/composition-api";
+import { Vue } from 'vue/types/vue';
 
-export type FormOption = FormItem[] | FormItem[][];
+export type FormOption = NullableFormItem[] | NullableFormItem[][];
 
 interface DynamicFormProps {
-  formOption: FormItem[] | Array<FormItem[]>,
+  formOption: FormOption,
   formModel: {[K in keyof object]: any}
 }
 
@@ -19,8 +20,10 @@ export interface FormItem {
   props?: { [key: string]: any },
   attrs?: { [key: string]: any },
   events?: { [key: string]: Function },
-  options?: Array<ElOptionTag> | VNodeChildren, // options可以传jsx，支持多个node
+  options?: ElOptionTag[] | VNodeChildren, // options可以传jsx，支持多个node
 }
+
+export type NullableFormItem = FormItem | null;
 
 // element ui 下拉框对象快捷格式
 export interface ElOptionTag {
@@ -147,11 +150,15 @@ const normalizeForm = (formOptions: FormItem[]) => {
   return formOptions.map((formItem) => [formItem]);
 };
 
+const filterNullItem = (formItem: FormItem[][]) => {
+  return formItem.map(formRow => {
+    return formRow.filter(formItem => formItem !== null);
+  })
+};
+
 const createFormItemVNode = (compVNodeData: CompVNodeData) => {
   return createElement(compVNodeData.tagName, compVNodeData.componentOption, compVNodeData.children);
 };
-
-let renderFn: (h: CreateElement) => VNode;
 
 export const DynamicForm = defineComponent({
   props: {
@@ -161,26 +168,32 @@ export const DynamicForm = defineComponent({
   setup: (props: DynamicFormProps, setupContext: SetupContext) => {
     context = setupContext;
     componentProps = props;
+    const elFormRef: Ref<null | Vue> = ref(null);
     const _form = computed(() => {
       if (props.formOption.length > 0 && !Array.isArray(props.formOption[0])) {
-        return normalizeForm(props.formOption as FormItem[]);
+        return filterNullItem(normalizeForm(props.formOption as FormItem[]));
       }
-      return props.formOption as Array<FormItem[]>;
+      return filterNullItem(props.formOption as FormItem[][]);
     });
 
     onMounted(() => {
-      console.warn('in dy form', setupContext.refs);
+      elFormRef.value = setupContext.refs.el_form as Vue;
     });
-
-    renderFn = (h: CreateElement) => (
+    return {
+      _form, elFormRef
+    }
+  },
+  render(h: CreateElement) {
+    const contextData = (this as typeof DynamicForm.data)!;
+    return (
       <el-form ref="el_form">
         {
-          _form.value.map((formOptionRow) => (
+          contextData._form.map((formOptionRow) => (
             <div class="form-row">
               {
                 formOptionRow.map(formItem => (
                   <div class="form-col">
-                    {createFormItem(formItem)}
+                    {createFormItem(formItem as FormItem)}
                   </div>
                 ))
               }
@@ -188,9 +201,6 @@ export const DynamicForm = defineComponent({
           ))
         }
       </el-form>
-    );
-  },
-  render(h: CreateElement) {
-    return renderFn(h);
+    )
   }
 });
