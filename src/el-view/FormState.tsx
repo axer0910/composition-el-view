@@ -11,18 +11,34 @@ export interface FormViewState<T> {
   formModel: Ref<UnwrapRef<T>>,
   updateFormModel: (newModel: T) => void,
   setFormModel: (newModel: T) => void,
-  className: string,
+  className: Ref<string>,
   setElFormRef: (_elFormRef: ElForm) => void,
   getElFormRef: () => ElForm,
+  labelWidth?: Ref<string>,
+  elFormProps?: Ref<{[key: string]: any}>,
+  elFormEvents?: Ref<{[key: string]: Function}>,
+  onRuleValidateSuccess?: () => Promise<void> | void,
+  onFinishValidate?: () => void,
+  onValidateError?: () => void
 }
 
 export interface useFromStateArg<T> {
   formModel: T,
   formOption: () => FormOption
-  className?: string
+  className?: string,
+  labelWidth?: string,
+  elFormProps?: {[key: string]: any},
+  elFormEvents?: {[key: string]: Function},
+  onRuleValidateSuccess?: () => Promise<void> | void,
+  onFinishValidate?: () => void,
+  onValidateError?: () => void
 }
 
-export function useFromState<T extends object>({formModel: initFormModel, formOption: formOptionGetter, className}: useFromStateArg<T>): FormViewState<T> {
+export function useFromState<T extends object>(
+  {formModel: initFormModel,
+   formOption: formOptionGetter,
+   className, labelWidth, elFormProps, elFormEvents, onRuleValidateSuccess, onFinishValidate, onValidateError
+  }: useFromStateArg<T>): FormViewState<T> {
   // formOption应该是一个computed属性,getter里面包含用户自定义的生成formOption逻辑（）
   let formOption;
   let elFormRefInstance = {} as ElForm;
@@ -51,18 +67,22 @@ export function useFromState<T extends object>({formModel: initFormModel, formOp
   // 获取ElForm组件引用
   const getElFormRef = () => elFormRefInstance;
 
-  // todo 表单验证（使用element ui自带）
-  // todo 自定义提交按钮放在formview的slot里面
+  // 表单验证（使用element ui自带）
+  // 自定义提交按钮使用暴露调用的验证事件
+  // default props的处理
   // 传入的formOption可以支持null
   // 类型推导，传入的表单，数据能推导出一部分类型
-
   return {
     formOption,
     formModel: ref(reactive(formModel)),
     updateFormModel,
     setFormModel,
-    className: className ? className : '',
+    className: ref(className ?? ''),
     setElFormRef,
-    getElFormRef
+    getElFormRef,
+    labelWidth: ref(labelWidth ?? ''),
+    elFormProps: ref(reactive(elFormProps ?? {})),
+    elFormEvents: ref(reactive(elFormEvents ?? {})),
+    onRuleValidateSuccess, onFinishValidate, onValidateError
   };
 }

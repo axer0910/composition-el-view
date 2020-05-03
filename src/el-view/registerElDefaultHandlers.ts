@@ -3,7 +3,7 @@ import { ElOptionTag, registerElTagHandlers } from '@/el-view/DynamicForm';
 
 export const registerHandlers = () => {
   registerElTagHandlers('el-select', {
-    slotBuilderFn: (options: Array<ElOptionTag>) => {
+    slotBuilderFn: (options: ElOptionTag[]) => {
       return options.map(option => {
         return {
           tagName: 'el-option',
