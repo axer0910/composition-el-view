@@ -127,7 +127,7 @@
           ];
           return res;
         },
-        onRuleValidateSuccess: (currMode) => {
+        onRuleValidateSuccess: (currModel) => {
           return new Promise<string>((resolve, reject) => {
             setTimeout(() => {
               if (currModel.testInput2 === 'fail') {
