@@ -5,6 +5,9 @@ import { ElForm } from 'element-ui/types/form';
 
 // formOptionGetter可直接传入formOption数组或者一个函数返回formOption
 // initFormModel作为form绑定的初始数据源
+// todo onRuleValidateSuccess的入参类型（根据onRuleValidateSuccess返回的promise类型来确定）
+type UnpackFnReturn<T> = T extends (arg?: any) => Promise<infer U> ? U
+  : T extends (arg?: any) => void ? never : T;
 
 export interface FormViewState<T> {
   formOption: Ref<readonly NullableFormItem[] | readonly NullableFormItem[][]>,
@@ -17,9 +20,9 @@ export interface FormViewState<T> {
   labelWidth?: Ref<string>,
   elFormProps?: Ref<{[key: string]: any}>,
   elFormEvents?: Ref<{[key: string]: Function}>,
-  onRuleValidateSuccess?: () => Promise<void> | void,
-  onFinishValidate?: () => void,
-  onValidateError?: () => void
+  onRuleValidateSuccess?: (currModel: T) => Promise<any> | void,
+  onFinishValidate?: (result: any) => void,
+  onValidateError?: (msg: string) => void
 }
 
 export interface useFromStateArg<T> {
@@ -29,9 +32,9 @@ export interface useFromStateArg<T> {
   labelWidth?: string,
   elFormProps?: {[key: string]: any},
   elFormEvents?: {[key: string]: Function},
-  onRuleValidateSuccess?: () => Promise<void> | void,
-  onFinishValidate?: () => void,
-  onValidateError?: () => void
+  onRuleValidateSuccess?: (currModel: T) => Promise<any> | void,
+  onFinishValidate?: (result: any) => void,
+  onValidateError?: (msg: string) => void
 }
 
 export function useFromState<T extends object>(

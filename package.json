@@ -1,13 +1,26 @@
 {
   "name": "composition-el-view",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "buildlib": "vue-cli-service build  --target lib  --name elCompositonView ./src/el-view/index.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
+  "main": "dist/elCompositonView.umd.js",
+  "description": "A Element UI utils with vue composition api",
+  "keywords": [
+    "element ui",
+    "vue-composition-api",
+    "vie"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axer0910/composition-el-view.git"
+  },
+  "author": "axer0910",
+  "license": "MIT",
   "dependencies": {
     "@vue/composition-api": "^0.5.0",
     "core-js": "^3.6.4",

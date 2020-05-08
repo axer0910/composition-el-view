@@ -6,6 +6,8 @@
         <el-button @click="operations.resetForm">自定义重置</el-button>
       </template>
     </form-view>
+    <dialog-form-view :formState="formStateDialog" ref="formDialog"></dialog-form-view>
+    <el-button @click="() => {formDialog.showDialog()}">展示表单对话框</el-button>
   </div>
 </template>
 
@@ -13,7 +15,8 @@
   import { FormView } from '@/el-view/FormView';
   import { useFromState } from '@/el-view/FormState';
   import { NullableFormItem } from '@/el-view/DynamicForm';
-  import { onMounted } from '@vue/composition-api';
+  import { onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
+  import { DialogFormView, DialogFormViewRenderContext } from '@/el-view/DialogFormView';
 
   // demo列表
   // 表单state（配置，钩子，ElForm额外的props，on，model，onFormValidateSuccess, finishValidate, validateError）
@@ -27,9 +30,11 @@
   // 默认props
   export default {
     components: {
-      'form-view': FormView
+      'form-view': FormView,
+      'dialog-form-view': DialogFormView
     },
-    setup: () => {
+    setup: (props: {}, setupContext: SetupContext) => {
+      const formDialog: Ref<null | DialogFormViewRenderContext> = ref(null);
       const formState = useFromState({
         elFormProps: {
           'show-message': true
@@ -91,11 +96,60 @@
           console.warn('validateError called');
         }
       });
+      const formStateDialog = useFromState({
+        elFormProps: {
+          'show-message': true
+        },
+        formModel: {
+          testInput1: '',
+          testInput2: ''
+        },
+        formOption: () => {
+          const res: NullableFormItem[] = [
+            {
+              formLabel: '输入框1',
+              tagName: 'el-input',
+              modelKey: 'testInput1',
+              required: true,
+              attrs: {
+                placeholder: ''
+              }
+            },
+            {
+              formLabel: '输入框2',
+              tagName: 'el-input',
+              modelKey: 'testInput2',
+              required: true,
+              attrs: {
+                placeholder: '输入fail触发验证失败'
+              }
+            }
+          ];
+          return res;
+        },
+        onRuleValidateSuccess: (currMode) => {
+          return new Promise<string>((resolve, reject) => {
+            setTimeout(() => {
+              if (currModel.testInput2 === 'fail') {
+                reject(new Error('你输入了fail，所有模拟验证失败'));
+              } else {
+                resolve('模拟验证成功');
+              }
+            }, 1000);
+          });
+        },
+        onFinishValidate: (successResult) => {
+          console.log('dialog validateSuccess called', setupContext.root.$message.success('验证成功'), successResult);
+        },
+        onValidateError: (errMsg) => {
+          console.warn('dialog validateError called', setupContext.root.$message.error('验证失败: ' + errMsg));
+        }
+      });
       onMounted(() => {
-        formState.getElFormRef().clearValidate();
+        console.log('form dialog ref', formDialog.value!.showDialog())
       });
       return {
-        formState
+        formState, formStateDialog, formDialog
       }
     }
   }
