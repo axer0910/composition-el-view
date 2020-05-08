@@ -6,6 +6,7 @@
     "jsx": "preserve",
     "importHelpers": true,
     "declaration": true,
+    "outDir": "dist",
     "moduleResolution": "node",
     "allowJs": true,
     "esModuleInterop": true,

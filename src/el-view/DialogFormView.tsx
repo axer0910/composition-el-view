@@ -3,10 +3,9 @@ import { CreateElement } from 'vue';
 import { ComponentRenderProxy } from '@vue/composition-api/dist/component/component';
 import { FormViewState } from '@/el-view/FormState';
 import { FormView, FormViewComponentContext } from '@/el-view/FormView';
-import Vue from 'vue';
 
-export type DialogFormViewRenderContext = ComponentRenderProxy & typeof DialogFormView.data;
-type DialogFormViewProps = { formState: FormViewState<object> } & typeof DialogFormView.props;
+export type DialogFormViewRenderContext = any;
+type DialogFormViewProps = any;
 
 export const DialogFormView = defineComponent({
   name: 'DialogFormView',components: {
@@ -26,8 +25,9 @@ export const DialogFormView = defineComponent({
     const showDialog = async () => {
       dialogVisible.value = true;
       // 清理表单验证
-      await Vue.nextTick();
-      props.formState!.getElFormRef().resetFields();
+      setTimeout(() => {
+        props.formState!.getElFormRef().resetFields();
+      });
     };
     const hideDialog = () => {
       dialogVisible.value = false;
@@ -47,11 +47,12 @@ export const DialogFormView = defineComponent({
       }
       submitPromise.value = null;
     };
-    const formViewRef: Ref<null | FormViewComponentContext> = ref(null);
+    const formViewRef: Ref<any> = ref(null);
     const formSubmit: Ref<() => Promise<void>> = ref(() => {});
     onMounted(async () => {
-      await Vue.nextTick();
-      formSubmit.value = formViewRef.value!.operations.submitForm;
+      setTimeout(() => {
+        formSubmit.value = formViewRef.value!.operations.submitForm;
+      })
     });
     return {
       dialogVisible, showDialog, formViewRef, submitFn, hideDialog, submitPromise
@@ -59,8 +60,8 @@ export const DialogFormView = defineComponent({
   },
   render(h: CreateElement) {
     // todo 右上角小叉处理
-    const renderContext = this as DialogFormViewRenderContext;
-    const props = renderContext.$props as DialogFormViewProps;
+    const renderContext = this as any;
+    const props = renderContext.$props as any;
     return (
       <el-dialog title={ props!.dialogTitle }
                  visible={ renderContext.dialogVisible }

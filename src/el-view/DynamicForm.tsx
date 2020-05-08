@@ -2,7 +2,6 @@ import { CreateElement, VNode, VNodeChildren, VNodeData } from 'vue';
 import { computed, createElement, onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '@/el-view/utils';
 import { defineComponent } from "@vue/composition-api";
-import { Vue } from 'vue/types/vue';
 
 export type FormOption = NullableFormItem[] | NullableFormItem[][];
 
@@ -233,7 +232,7 @@ export const DynamicForm = defineComponent({
   setup: (props: DynamicFormProps, setupContext: SetupContext) => {
     context = setupContext;
     componentProps = props;
-    const elFormRef: Ref<null | Vue> = ref(null);
+    const elFormRef: Ref<any> = ref(null);
     const _form = computed(() => {
       if (props.formOption.length > 0 && !Array.isArray(props.formOption[0])) {
         return filterNullItem(normalizeForm(props.formOption as FormItem[]));
