@@ -1,6 +1,6 @@
 import { CreateElement, VNode, VNodeChildren, VNodeData } from 'vue';
 import { computed, createElement, onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
-import { getObjectValue, setObjectValue } from '@/el-view/utils';
+import { getObjectValue, setObjectValue } from './utils';
 import { defineComponent } from "@vue/composition-api";
 
 export type FormOption = NullableFormItem[] | NullableFormItem[][];

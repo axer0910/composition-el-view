@@ -1,5 +1,5 @@
 // 注册默认的一些element ui配置
-import { ElOptionTag, registerElTagHandlers } from '@/el-view/DynamicForm';
+import { ElOptionTag, registerElTagHandlers } from './DynamicForm';
 
 export const registerHandlers = () => {
   registerElTagHandlers('el-select', {

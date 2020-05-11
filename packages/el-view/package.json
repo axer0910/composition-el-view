@@ -1,0 +1,43 @@
+{
+  "name": "composition-el-view-form",
+  "version": "0.1.0",
+  "description": "composition-el-view-form",
+  "main": "index.js",
+  "module": "dist/composition-el-view-form.esm-bundler.js",
+  "unpkg": "dist/composition-el-view-form.global.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/composition-el-view-form.d.ts",
+  "buildOptions": {
+    "priority": 1,
+    "name": "composition-el-view-form",
+    "formats": [
+      "esm-bundler",
+      "cjs",
+      "global"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axer0910/composition-el-view"
+  },
+  "keywords": [
+    "vue",
+    "composition-api",
+    "vue-composable",
+    "composable"
+  ],
+  "author": "axer0910",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/axer0910/composition-el-view/issues"
+  },
+  "sideEffects": false,
+  "peerDependencies": {
+    "@vue/composition-api": "^0.5.0",
+    "vue": "^2.6.10",
+    "element-ui": "^2.13.0"
+  }
+}

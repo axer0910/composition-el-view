@@ -2,11 +2,11 @@ import {
   ComponentRenderProxy,
   defineComponent, onMounted, ref, Ref, SetupContext
 } from '@vue/composition-api';
-import { DynamicForm } from '@/el-view/DynamicForm';
-import { FormViewState } from '@/el-view/FormState';
+import { DynamicForm } from './DynamicForm';
+import { FormViewState } from './FormState';
 import { ElForm } from 'element-ui/types/form';
 import { CreateElement } from 'vue';
-import { isPromise } from '@/el-view/utils';
+import { isPromise } from './utils';
 interface FormViewProps<T> {
   formState: FormViewState<T>,
   showOperations: boolean

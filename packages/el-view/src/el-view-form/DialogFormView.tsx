@@ -1,11 +1,11 @@
 import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { CreateElement } from 'vue';
 import { ComponentRenderProxy } from '@vue/composition-api/dist/component/component';
-import { FormViewState } from '@/el-view/FormState';
-import { FormView, FormViewComponentContext } from '@/el-view/FormView';
+import { FormViewState } from './FormState';
+import { FormView } from './FormView';
 
-export type DialogFormViewRenderContext = any;
-type DialogFormViewProps = any;
+export type DialogFormViewRenderContext = ComponentRenderProxy & typeof DialogFormView.data;
+type DialogFormViewProps = { formState: FormViewState<object> } & typeof DialogFormView.props;
 
 export const DialogFormView = defineComponent({
   name: 'DialogFormView',components: {
@@ -60,8 +60,8 @@ export const DialogFormView = defineComponent({
   },
   render(h: CreateElement) {
     // todo 右上角小叉处理
-    const renderContext = this as any;
-    const props = renderContext.$props as any;
+    const renderContext = this as DialogFormViewRenderContext;
+    const props = renderContext.$props as DialogFormViewProps;
     return (
       <el-dialog title={ props!.dialogTitle }
                  visible={ renderContext.dialogVisible }

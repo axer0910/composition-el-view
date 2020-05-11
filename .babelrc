@@ -1,0 +1,4 @@
+{
+  "presets": ["env", "@babel/preset-typescript"],
+  "plugins": ["transform-vue-jsx"]
+}

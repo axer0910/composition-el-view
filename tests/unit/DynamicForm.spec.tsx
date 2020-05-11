@@ -1,8 +1,8 @@
-import { createLocalVue, shallowMount, VueClass } from '@vue/test-utils';
-import { FormItem, DynamicForm } from '@/el-view/DynamicForm';
+import { createLocalVue, shallowMount } from '@vue/test-utils';
+import { FormItem, DynamicForm } from '../../src/el-view/DynamicForm';
 import VueCompositionApi, { reactive, Ref, ref } from '@vue/composition-api';
 import ElementUI from 'element-ui';
-import { registerHandlers } from '@/el-view/registerElDefaultHandlers';
+import { registerHandlers } from '../../src/el-view/registerElDefaultHandlers';
 import Vue from 'vue';
 
 describe('DynamicForm.tsx', () => {

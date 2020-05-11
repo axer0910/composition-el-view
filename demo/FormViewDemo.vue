@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts">
-  import { FormView } from '@/el-view/FormView';
-  import { useFromState } from '@/el-view/FormState';
-  import { NullableFormItem } from '@/el-view/DynamicForm';
+  import { FormView } from './FormView';
+  import { useFromState } from './FormState';
+  import { NullableFormItem } from './DynamicForm';
   import { onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
-  import { DialogFormView, DialogFormViewRenderContext } from '@/el-view/DialogFormView';
+  import { DialogFormView, DialogFormViewRenderContext } from './DialogFormView';
 
   // demo列表
   // 表单state（配置，钩子，ElForm额外的props，on，model，onFormValidateSuccess, finishValidate, validateError）

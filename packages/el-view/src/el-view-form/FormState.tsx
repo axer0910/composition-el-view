@@ -1,4 +1,4 @@
-import { FormOption, NullableFormItem } from '@/el-view/DynamicForm';
+import { FormOption, NullableFormItem } from './DynamicForm';
 import { computed, reactive, ref, Ref } from '@vue/composition-api';
 import { UnwrapRef } from '@vue/composition-api/dist/reactivity';
 import { ElForm } from 'element-ui/types/form';
