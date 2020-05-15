@@ -5,7 +5,6 @@
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
-    "declaration": true,
     "outDir": "dist",
     "moduleResolution": "node",
     "allowJs": true,
@@ -18,10 +17,9 @@
       "jest"
     ],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "el-view": ["el-view/src"]
     },
+    "typeRoots": ["node_modules/@types"],
     "lib": [
       "esnext",
       "dom",
@@ -30,11 +28,7 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "./shims-tsx.d.ts","el-view/src"
   ],
   "exclude": [
     "node_modules"

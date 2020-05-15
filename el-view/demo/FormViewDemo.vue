@@ -146,7 +146,7 @@
         }
       });
       onMounted(() => {
-        console.log('form dialog ref', formDialog.value!.showDialog())
+        console.log('form dialog ref', formDialog.value.showDialog())
       });
       return {
         formState, formStateDialog, formDialog

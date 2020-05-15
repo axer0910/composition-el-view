@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+el-view/dist
+temp
 
 # local env files
 .env.local

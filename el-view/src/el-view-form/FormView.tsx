@@ -6,7 +6,7 @@ import { DynamicForm } from './DynamicForm';
 import { FormViewState } from './FormState';
 import { ElForm } from 'element-ui/types/form';
 import { CreateElement } from 'vue';
-import { isPromise } from './utils';
+import { isPromise } from '../utils';
 interface FormViewProps<T> {
   formState: FormViewState<T>,
   showOperations: boolean

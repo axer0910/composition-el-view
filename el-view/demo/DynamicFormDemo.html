@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <div id="app">
+    <comp></comp>
+  </div>
+  <script src="https://blog.marisa6.cn/d/vue.js"></script>
+  <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 引入组件库 -->
+  <script src="https://blog.marisa6.cn/d/elementui/index.js"></script>
+  <script src="../dist/el-view.global.js"></script>
+</head>
+<body>
+</body>
+<script>
+  Vue.use(window.vueCompositionApi.default);
+  const { defineComponent, reactive, ref } = window.vueCompositionApi;
+  const { DynamicForm } = window.compositionElViewForm;
+  const comp = defineComponent({
+    components: {DynamicForm},
+    template: `
+    <div>
+      <DynamicForm :formOption="formOption" :formModel="formModel" />
+    </div>
+    `,
+    setup(){
+      const formModel = reactive({
+      });
+      let formOption = ref([
+        {
+          formLabel: '测试表单项',
+          tagName: 'el-input',
+          modelKey: 'test2',
+          props: {
+            type: 'text'
+          },
+          attrs: {
+            placeholder: '测试表单项'
+          }
+        },
+        {
+          formLabel: '测试表单项3',
+          tagName: 'el-input',
+          modelKey: 'test3',
+          props: {
+            type: 'text'
+          },
+          attrs: {
+            placeholder: '测试表单项'
+          }
+        },
+        {
+          formLabel: '测试表单项4',
+          tagName: 'el-select',
+          modelKey: 'test4',
+          attrs: {
+            placeholder: '测试表单项'
+          },
+          props: {
+            clearable: true
+          },
+          options: [
+            {
+              label: 'test1',
+              value: 1
+            },
+            {
+              label: 'test2',
+              value: 2
+            }
+          ]
+        }
+      ]);
+      return {
+        formOption, formModel
+      }
+    }
+  });
+  var app = new Vue({
+    el: '#app',
+    components: {comp},
+    methods: {},
+  })
+</script>
+</html>

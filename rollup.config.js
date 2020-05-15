@@ -1,26 +1,28 @@
-import fs from "fs";
 import path from "path";
 import ts from "rollup-plugin-typescript2";
 import replace from "@rollup/plugin-replace";
 import json from "@rollup/plugin-json";
 import resolvePlugin from "@rollup/plugin-node-resolve";
 import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
 
 if (!process.env.TARGET) {
   throw new Error("TARGET package must be specified via --environment flag.");
 }
 
-console.log('build target is', process.env.TARGET);
+console.log('build target is', process.env.TARGET); // TARGET暂时固定为el-view
 
-const packagesDir = path.resolve(__dirname, "packages");
-const packageDir = path.resolve(packagesDir, process.env.TARGET);
+// const packagesDir = path.resolve(__dirname, "packages");
+// const packageDir = path.resolve(packagesDir, process.env.TARGET);
+const packageDir = path.resolve(__dirname, 'el-view');
 const name = path.basename(packageDir);
 const resolve = p => path.resolve(packageDir, p);
 const pkg = require(resolve(`package.json`));
 console.log('pkg is', pkg);
 const packageOptions = pkg.buildOptions || {};
 
-const knownExternals = fs.readdirSync(packagesDir);
+// const knownExternals = fs.readdirSync(packagesDir);
+const knownExternals = [];
 
 // ensure TS checks only once for each build
 let hasTSChecked = false;
@@ -32,7 +34,12 @@ const configs = {
   },
   cjs: {
     file: resolve(`dist/${name}.cjs.js`),
-    format: `cjs`
+    format: `cjs`,
+    globals: {
+      "@vue/composition-api": "vueCompositionApi",
+      vue: "Vue",
+      "element-ui": "elementUi"
+    }
   },
   global: {
     file: resolve(`dist/${name}.global.js`),
@@ -54,14 +61,7 @@ const setup = {
   global: {
     external: ["vue", "@vue/composition-api", "element-ui"],
     plugins: [
-      resolvePlugin({
-        // mainFields: [
-        //   'browser'
-        // ]
-        // modulesOnly: true,
-        // only: "@vue-composable/core",
-        // dedupe: ["vue", "@vue/composition-api"]
-      })
+      resolvePlugin({})
     ]
   }
 };
@@ -143,16 +143,22 @@ function createConfig(output, plugins = [], config = {}) {
         ),
     plugins: [
       ...(config.plugins || []),
+      tsPlugin,
+      commonjs({
+        // non-CommonJS modules will be ignored, but you can also
+        // specifically include/exclude files
+        include: 'node_modules/**',  // Default: undefined
+        sourceMap: false,  // Default: true
+      }),
       babel({
         exclude: 'node_modules/**',
         runtimeHelpers: true,
-        presets: ["@babel/preset-env", '@vue/babel-preset-app'],
-        plugins: ['transform-vue-jsx', "@babel/plugin-transform-runtime"]
+        babelrc: false,
+        extensions: ['.js', '.jsx', '.ts', '.tsx'] // let babel transform tsx files
       }),
       json({
         namedExports: false
       }),
-      tsPlugin,
       createReplacePlugin(
         isProductionBuild,
         isBundlerESMBuild,

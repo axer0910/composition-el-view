@@ -1,8 +1,9 @@
-import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, Ref, ref, SetupContext, watch } from '@vue/composition-api';
 import { CreateElement } from 'vue';
 import { ComponentRenderProxy } from '@vue/composition-api/dist/component/component';
 import { FormViewState } from './FormState';
 import { FormView } from './FormView';
+import Vue from 'vue';
 
 export type DialogFormViewRenderContext = ComponentRenderProxy & typeof DialogFormView.data;
 type DialogFormViewProps = { formState: FormViewState<object> } & typeof DialogFormView.props;
@@ -20,7 +21,7 @@ export const DialogFormView = defineComponent({
     dialogClassName: String,
     formState: Object
   },
-  setup: (props) => {
+  setup: (props, setupContext: SetupContext) => {
     const dialogVisible = ref(false);
     const showDialog = async () => {
       dialogVisible.value = true;
@@ -36,10 +37,8 @@ export const DialogFormView = defineComponent({
     const submitFn = async () => {
       if (submitPromise.value) return;
       try {
-        console.log('before run submit');
         submitPromise.value = formSubmit.value();
         await submitPromise.value;
-        console.log('after run submit');
         hideDialog();
       } catch (e) {
         // 验证异常
@@ -49,10 +48,11 @@ export const DialogFormView = defineComponent({
     };
     const formViewRef: Ref<any> = ref(null);
     const formSubmit: Ref<() => Promise<void>> = ref(() => {});
-    onMounted(async () => {
-      setTimeout(() => {
+    watch(() => dialogVisible.value, async () => {
+      if (dialogVisible.value) {
+        await Vue.nextTick();
         formSubmit.value = formViewRef.value!.operations.submitForm;
-      })
+      }
     });
     return {
       dialogVisible, showDialog, formViewRef, submitFn, hideDialog, submitPromise
@@ -67,8 +67,8 @@ export const DialogFormView = defineComponent({
                  visible={ renderContext.dialogVisible }
                  width={ props!.dialogWidth }
                  showClose={ true }
-                 className={ props!.dialogClassName }>
-        <form-view formState={ props!.formState } ref="formViewRef" showOperations={false}  v-loading={ renderContext.submitPromise !== null} />
+                 class={ props!.dialogClassName }>
+        <form-view formState={ props!.formState } ref="formViewRef" showOperations={false} v-loading={ renderContext.submitPromise !== null} />
         <span slot="footer" class="dialog-footer">
           <el-button onClick={ () => { renderContext.hideDialog() } }>取 消</el-button>
           <el-button type="primary" onClick={ () => { renderContext.submitFn() } }>确 定</el-button>

@@ -1,6 +1,6 @@
 import { CreateElement, VNode, VNodeChildren, VNodeData } from 'vue';
 import { computed, createElement, onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
-import { getObjectValue, setObjectValue } from './utils';
+import { getObjectValue, setObjectValue } from '../utils';
 import { defineComponent } from "@vue/composition-api";
 
 export type FormOption = NullableFormItem[] | NullableFormItem[][];
@@ -188,9 +188,9 @@ const createFormItem = (formItem: FormItem) => {
   const componentTagName = tagName;
   const componentOption: VNodeData = {
     key: modelKey,
-    props,
-    attrs,
-    on: events
+    props: {...props},
+    attrs: {...attrs},
+    on: {...events}
   };
   mergeEvents(componentOption, formItem);
   mergeProps(componentOption, formItem);
@@ -218,7 +218,7 @@ const filterNullItem = (formItem: FormItem[][]) => {
 };
 
 const createFormItemVNode = (compVNodeData: CompVNodeData) => {
-  return createElement(compVNodeData.tagName, compVNodeData.componentOption, compVNodeData.children);
+  return createElement(compVNodeData.tagName, { ...compVNodeData.componentOption }, compVNodeData.children);
 };
 
 export const DynamicForm = defineComponent({
@@ -257,9 +257,6 @@ export const DynamicForm = defineComponent({
       return rules;
     });
 
-    onMounted(() => {
-      elFormRef.value = setupContext.refs.el_form as Vue;
-    });
     return {
       _form, elFormRef, formRules
     }
@@ -278,7 +275,7 @@ export const DynamicForm = defineComponent({
       on: { ...extEvents }
     };
     return (
-      <el-form ref="el_form" { ...formProps }>
+      <el-form ref="elFormRef" { ...formProps }>
         {
           contextData._form.map((formOptionRow) => (
             <div class="form-row">

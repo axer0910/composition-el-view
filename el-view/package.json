@@ -1,7 +1,7 @@
 {
-  "name": "composition-el-view-form",
+  "name": "composition-el-view",
   "version": "0.1.0",
-  "description": "composition-el-view-form",
+  "description": "composition-el-view",
   "main": "index.js",
   "module": "dist/composition-el-view-form.esm-bundler.js",
   "unpkg": "dist/composition-el-view-form.global.js",
@@ -12,7 +12,7 @@
   "types": "dist/composition-el-view-form.d.ts",
   "buildOptions": {
     "priority": 1,
-    "name": "composition-el-view-form",
+    "name": "compositionElViewForm",
     "formats": [
       "esm-bundler",
       "cjs",

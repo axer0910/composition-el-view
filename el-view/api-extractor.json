@@ -1,0 +1,7 @@
+{
+  "extends": "../api-extractor.json",
+  "mainEntryPointFilePath": "./dist/el-view-form/index.d.ts",
+  "dtsRollup": {
+    "untrimmedFilePath": "./dist/el-view-form.d.ts"
+  }
+}
