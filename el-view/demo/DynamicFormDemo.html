@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <div id="app">
-    <comp></comp>
   </div>
   <script src="https://blog.marisa6.cn/d/vue.js"></script>
   <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
@@ -18,18 +17,18 @@
 </body>
 <script>
   Vue.use(window.vueCompositionApi.default);
-  const { defineComponent, reactive, ref } = window.vueCompositionApi;
+  const { reactive, ref } = window.vueCompositionApi;
   const { DynamicForm } = window.compositionElViewForm;
-  const comp = defineComponent({
-    components: {DynamicForm},
+  const app = new Vue({
+    components: { DynamicForm },
     template: `
-    <div>
-      <DynamicForm :formOption="formOption" :formModel="formModel" />
-    </div>
+      <div>
+        <DynamicForm :formOption="formOption" :formModel="formModel" />
+      </div>
     `,
-    setup(){
-      const formModel = reactive({
-      });
+    setup() {
+      console.log('run setup');
+      const formModel = reactive({});
       let formOption = ref([
         {
           formLabel: '测试表单项',
@@ -75,15 +74,11 @@
           ]
         }
       ]);
+      const myVal = ref(3);
       return {
-        formOption, formModel
+        formOption, formModel, myVal
       }
     }
-  });
-  var app = new Vue({
-    el: '#app',
-    components: {comp},
-    methods: {},
-  })
+  }).$mount('#app');
 </script>
 </html>

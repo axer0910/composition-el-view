@@ -223,7 +223,10 @@ const createFormItemVNode = (compVNodeData: CompVNodeData) => {
 
 export const DynamicForm = defineComponent({
   props: {
-    formOption: Array,
+    formOption: {
+      type: Array,
+      default: () => []
+    },
     formModel: Object,
     labelWidth: String,
     formProps: Object,

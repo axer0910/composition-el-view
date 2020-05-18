@@ -6,27 +6,23 @@
   <script src="https://blog.marisa6.cn/d/vue.js"></script>
   <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
   <!-- 引入样式 -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="https://blog.marisa6.cn/d/elementui/index.css">
   <!-- 引入组件库 -->
   <script src="https://blog.marisa6.cn/d/elementui/index.js"></script>
   <script src="../dist/el-view.global.js"></script>
 </head>
 <body>
   <div id="app">
-    <comp></comp>
   </div>
 </body>
 </html>
 <script>
-  // todo 改为全局install插件
   Vue.use(window.vueCompositionApi.default);
+  Vue.use(window.compositionElViewForm);
   const { DynamicForm } = window.compositionElViewForm;
   const { onMounted, ref } = window.vueCompositionApi;
-  const { FormView, DialogFormView ,useFromState } = window.compositionElViewForm;
-  const comp = {
-    components: {
-      FormView, DialogFormView
-    },
+  const { useFromState } = window.compositionElViewForm;
+  const app = new Vue({
     template: `
       <div>
         <form-view :formState="formState">
@@ -35,7 +31,7 @@
             <el-button @click="operations.resetForm">自定义重置</el-button>
           </template>
         </form-view>
-        <dialog-form-view :formState="formStateDialog" ref="formDialog"></dialog-form-view>
+        <dialog-form :formState="formStateDialog" ref="formDialog"></dialog-form>
         <el-button @click="() => {formDialog.showDialog()}">展示表单对话框</el-button>
       </div>
     `,
@@ -151,18 +147,11 @@
         }
       });
       onMounted(() => {
-        // console.log('form dialog ref', formDialog.value.showDialog())
+        console.log('form dialog ref', formDialog.value.showDialog())
       });
-      console.log('form state is', formState);
       return {
         formState, formStateDialog, formDialog
       }
     }
-  };
-  var app = new Vue({
-    el: '#app',
-    components: {
-      comp
-    }
-  })
+  }).$mount('#app');
 </script>
