@@ -60,6 +60,7 @@ export const DialogFormView = defineComponent({
   },
   render(h: CreateElement) {
     // todo 右上角小叉处理
+    // todo dialog的option
     const renderContext = this as DialogFormViewRenderContext;
     const props = renderContext.$props as DialogFormViewProps;
     return (

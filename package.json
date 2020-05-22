@@ -20,7 +20,6 @@
   },
   "author": "axer0910",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/plugin-transform-runtime": "^7.9.6",
@@ -30,19 +29,14 @@
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@rollup/plugin-replace": "^2.3.2",
     "@types/jest": "^24.0.19",
-    "@typescript-eslint/eslint-plugin": "^2.26.0",
-    "@typescript-eslint/parser": "^2.26.0",
     "@vue/babel-plugin-transform-vue-jsx": "^1.1.2",
     "@vue/babel-preset-app": "^4.3.1",
     "@vue/composition-api": "^0.5.0",
-    "babel-eslint": "^10.1.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",
     "brotli": "^1.3.2",
     "core-js": "2.6.11",
     "element-ui": "^2.13.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
     "rollup": "^2.8.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -50,35 +44,8 @@
     "rollup-plugin-typescript2": "^0.27.0",
     "typescript": "~3.8.3",
     "vue": "^2.6.11",
+    "docsify-cli": "^4.4.0",
     "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript"
-    ],
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    },
-    "rules": {
-      "no-unused-vars": 0
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
-    ]
   },
   "browserslist": [
     "> 1%",

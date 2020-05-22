@@ -2,6 +2,7 @@ import { CreateElement, VNode, VNodeChildren, VNodeData } from 'vue';
 import { computed, createElement, onMounted, Ref, ref, SetupContext } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '../utils';
 import { defineComponent } from "@vue/composition-api";
+import { Vue } from 'vue/types/vue';
 
 export type FormOption = NullableFormItem[] | NullableFormItem[][];
 
@@ -10,6 +11,7 @@ interface DynamicFormProps {
   formModel: {[K in keyof object]: any},
   labelWidth?: String,
   formProps?: {[key: string]: any},
+  formRule?: {[key: string]: ValidateRule[]},
   formEvents?: {[key: string]: Function},
 }
 
@@ -19,7 +21,7 @@ export interface FormItem {
   modelKey: string
   required?: boolean,
   requiredMsg?: string,
-  formRules?: Array<ValidateRule>,
+  formRules?: ValidateRule[],
   props?: { [key: string]: any },
   attrs?: { [key: string]: any },
   events?: { [key: string]: Function },
@@ -60,6 +62,8 @@ export interface CompVNodeData {
   componentOption?: VNodeData,
   children?: VNodeChildren
 }
+
+type ComponentContext = typeof DynamicForm.data & typeof DynamicForm.props & Vue;
 
 const elTagHandlers: Map<string, ElTagHandler> = new Map<string, ElTagHandler>();
 
@@ -113,7 +117,6 @@ const getBindProps = (formItem: FormItem) => {
 
 };
 
-// 绑定更新表单后的数据，并且触发表单更新事件
 const getBindEvents = (formItem: FormItem) => {
   let events: {[key: string]: Function} = {};
   if (elTagHandlers.has(formItem.tagName)) {
@@ -183,7 +186,9 @@ const setComponentSlot: (componentOption: VNodeData, formItem: FormItem) => VNod
   return options as VNode[];
 };
 
-const createFormItem = (formItem: FormItem) => {
+// todo 抽离生成表单方法
+// todo schema支持： default-slot, json, getter函数，普通对象
+const createElFormItem = (formItem: FormItem) => {
   const { tagName, props, attrs, events, modelKey, formLabel } = formItem;
   const componentTagName = tagName;
   const componentOption: VNodeData = {
@@ -204,6 +209,24 @@ const createFormItem = (formItem: FormItem) => {
       })}
     </el-form-item>
   );
+};
+
+const getElFormContent = (context: typeof DynamicForm.data & typeof DynamicForm.props & Vue) => {
+  console.warn('curr context is', context.$scopedSlots);
+  if (context.$scopedSlots.default) {
+    return context.$scopedSlots.default(context);
+  }
+  return context._form.map((formOptionRow) => (
+    <div class="form-row">
+      {
+        formOptionRow.map(formItem => (
+          <div class="form-col">
+            {createElFormItem(formItem as FormItem)}
+          </div>
+        ))
+      }
+    </div>
+  ));
 };
 
 // 如果是一维数组，那么以一列展示表单
@@ -230,7 +253,8 @@ export const DynamicForm = defineComponent({
     formModel: Object,
     labelWidth: String,
     formProps: Object,
-    formEvents: Object
+    formEvents: Object,
+    formRule: Object
   },
   setup: (props: DynamicFormProps, setupContext: SetupContext) => {
     context = setupContext;
@@ -243,7 +267,7 @@ export const DynamicForm = defineComponent({
       return filterNullItem(props.formOption as FormItem[][]);
     });
 
-    const formRules = computed(() => {
+    const formRules = props.formRule ? props.formRule : computed(() => {
       const rules: {[key: string]: object[]} = {};
       for (const row of _form.value) {
         for (const formItem of row) {
@@ -259,13 +283,14 @@ export const DynamicForm = defineComponent({
       }
       return rules;
     });
+    console.log('form rule is', formRules, props.formRule);
 
     return {
       _form, elFormRef, formRules
     }
   },
   render(h: CreateElement) {
-    const contextData = (this as typeof DynamicForm.data & typeof DynamicForm.props)!;
+    const contextData = (this as ComponentContext)!;
     const extProps = contextData.formProps ? { ...contextData.formProps } : {};
     const extEvents = contextData.formEvents ? { ...contextData.formEvents } : {};
     const formProps = {
@@ -280,17 +305,7 @@ export const DynamicForm = defineComponent({
     return (
       <el-form ref="elFormRef" { ...formProps }>
         {
-          contextData._form.map((formOptionRow) => (
-            <div class="form-row">
-              {
-                formOptionRow.map(formItem => (
-                  <div class="form-col">
-                    {createFormItem(formItem as FormItem)}
-                  </div>
-                ))
-              }
-            </div>
-          ))
+          getElFormContent(contextData)
         }
       </el-form>
     )

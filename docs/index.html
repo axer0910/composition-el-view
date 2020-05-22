@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Composable Element UI</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="https://blog.marisa6.cn/d/docsify/vue.css">
+  <link rel="stylesheet" href="https://blog.marisa6.cn/d/vuep/vuep.css">
+  <script src="https://blog.marisa6.cn/d/vue.js"></script>
+  <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
+  <script src="https://blog.marisa6.cn/d/vuep/vuep.min.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://blog.marisa6.cn/d/elementui/index.css">
+  <!-- 引入组件库 -->
+  <script src="https://blog.marisa6.cn/d/elementui/index.js"></script>
+  <script src="../build-dist/el-view.global.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'Composable Element UI',
+      loadSidebar: true,
+      repo: '',
+      subMaxLevel: 2
+    }
+  </script>
+  <script src="https://blog.marisa6.cn/d/docsify/docsify.min.js"></script>
+  <script>
+    Vue.use(window.vueCompositionApi.default);
+    Vue.use(window.vueCompositionApi.default);
+  </script>
+</body>
+</html>

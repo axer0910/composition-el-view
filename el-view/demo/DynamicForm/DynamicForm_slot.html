@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://blog.marisa6.cn/d/vue.js"></script>
+  <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://blog.marisa6.cn/d/elementui/index.css">
+  <!-- 引入组件库 -->
+  <script src="https://blog.marisa6.cn/d/elementui/index.js"></script>
+  <script src="../../dist/el-view.global.js"></script>
+</head>
+<body>
+<div id="app">
+  <dynamic-form :form-model="formModel" :form-rule="formRule">
+    <el-form-item label="活动区域" prop="region">
+      <el-input v-model="formModel.region" placeholder="请选择活动区域">
+      </el-input>
+    </el-form-item>
+  </dynamic-form>
+</div>
+</body>
+<script>
+  Vue.use(window.vueCompositionApi.default);
+  Vue.use(window.compositionElViewForm);
+  const { reactive, ref } = window.vueCompositionApi;
+  const app = new Vue({
+    setup() {
+      const formModel = reactive({});
+      const formRule = ref({
+        region: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ]
+      });
+      let formOption = ref([
+        {
+          formLabel: '测试表单项',
+          tagName: 'el-input',
+          modelKey: 'test2',
+          props: {
+            type: 'text'
+          },
+          attrs: {
+            placeholder: '测试表单项'
+          }
+        }
+      ]);
+      return {
+        formOption, formModel, formRule
+      }
+    }
+  }).$mount('#app');
+</script>

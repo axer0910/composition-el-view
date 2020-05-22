@@ -7,6 +7,7 @@ import { FormViewState } from './FormState';
 import { ElForm } from 'element-ui/types/form';
 import { CreateElement } from 'vue';
 import { isPromise } from '../utils';
+import { Vue } from 'vue/types/vue';
 interface FormViewProps<T> {
   formState: FormViewState<T>,
   showOperations: boolean
@@ -127,8 +128,8 @@ export const FormView = defineComponent({
               props.showOperations &&
               <div class="form-view-footer">
                 {
-                  (this as any).$scopedSlots.operation
-                    ? (this as any).$scopedSlots.operation!(context.operations)
+                  (this as Vue).$scopedSlots.operation
+                    ? (this as Vue).$scopedSlots.operation!(context.operations)
                     : (
                       <div class="option-bar">
                         <el-button type="primary" size="small" onClick={() => { defaultSubmitBtn(props.formState, context) }}>确 定</el-button>

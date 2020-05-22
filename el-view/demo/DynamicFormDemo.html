@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
-  <div id="app">
-  </div>
   <script src="https://blog.marisa6.cn/d/vue.js"></script>
   <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
   <!-- 引入样式 -->
@@ -14,20 +12,16 @@
   <script src="../dist/el-view.global.js"></script>
 </head>
 <body>
+  <div id="app">
+    <dynamic-form :form-option="formOption" :form-model="formModel" />
+  </div>
 </body>
 <script>
   Vue.use(window.vueCompositionApi.default);
+  Vue.use(window.compositionElViewForm);
   const { reactive, ref } = window.vueCompositionApi;
-  const { DynamicForm } = window.compositionElViewForm;
   const app = new Vue({
-    components: { DynamicForm },
-    template: `
-      <div>
-        <DynamicForm :formOption="formOption" :formModel="formModel" />
-      </div>
-    `,
     setup() {
-      console.log('run setup');
       const formModel = reactive({});
       let formOption = ref([
         {
