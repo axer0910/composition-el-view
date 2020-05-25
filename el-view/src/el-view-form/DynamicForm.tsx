@@ -76,12 +76,6 @@ const h = createElement;
 let context: SetupContext;
 let componentProps: DynamicFormProps;
 
-const emitFormChange = (val: any, modelKey: string) => {
-  const { formModel } = componentProps;
-  setObjectValue(formModel, modelKey, val);
-  context.emit('formChange', { ...formModel });
-};
-
 // 取得绑定的prop（绑定值与其他表单项组件默认props）
 const getBindProps = (formItem: FormItem) => {
   const { formModel } = componentProps;
