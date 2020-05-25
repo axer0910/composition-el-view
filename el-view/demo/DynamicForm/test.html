@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://blog.marisa6.cn/d/vue.js"></script>
+  <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://blog.marisa6.cn/d/elementui/index.css">
+  <!-- 引入组件库 -->
+  <script src="https://blog.marisa6.cn/d/elementui/index.js"></script>
+  <script src="../../dist/el-view.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <el-form :model="formModel" :rules="rules" ref="elFormRef" label-width="100px" class="demo-ruleForm">
+      <el-formitem-control>
+
+      </el-formitem-control>
+    </el-form>
+  </div>
+</body>
+</html>
+<script>
+  Vue.use(window.vueCompositionApi.default);
+  Vue.use(window.compositionElViewForm);
+  const { reactive, ref, onMounted } = window.vueCompositionApi;
+  const { useElForm } = window.compositionElViewForm;
+  const app = new Vue({
+    setup() {
+      const formModel = ref(reactive({
+        testInput: '111'
+      }));
+      const rules = ref({
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ]
+      });
+      const createFormItemMethod = ref(() => {});
+      const { elFormRef } = useElForm({});
+      console.warn('el form ref', elFormRef);
+      // let formOption = ref([
+      //   {
+      //     formLabel: '测试表单项',
+      //     tagName: 'el-input',
+      //     modelKey: 'test2',
+      //     props: {
+      //       type: 'text'
+      //     },
+      //     attrs: {
+      //       placeholder: '测试表单项'
+      //     }
+      //   }
+      // ]);
+      return {
+        formModel, elFormRef, rules, createFormItemMethod
+      }
+    }
+  }).$mount('#app');
+</script>

@@ -16,7 +16,7 @@ export interface FormViewState<T> {
   setFormModel: (newModel: T) => void,
   className: Ref<string>,
   setElFormRef: (_elFormRef: ElForm) => void,
-  getElFormRef: () => ElForm,
+  getElFormRef: () => ElForm, // 不用函数，直接返回对象结构出来
   labelWidth?: Ref<string>,
   elFormProps?: Ref<{[key: string]: any}>,
   elFormEvents?: Ref<{[key: string]: Function}>,

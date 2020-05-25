@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://blog.marisa6.cn/d/vue.js"></script>
+  <script src="https://blog.marisa6.cn/d/vue-composition-api.umd.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://blog.marisa6.cn/d/elementui/index.js"></script>
+  <script src="../../dist/el-view.global.js"></script>
+</head>
+<body>
+<div id="app">
+  <form-view :form-state="formState"></form-view>
+</div>
+</body>
+<script>
+  Vue.use(window.vueCompositionApi.default);
+  Vue.use(window.compositionElViewForm);
+  const { onMounted, ref } = window.vueCompositionApi;
+  const { useFromState } = window.compositionElViewForm;
+  const app = new Vue({
+    setup(props, setupContext) {
+      const formState = useFromState({
+        formOption: () => {
+          return [
+            {
+              formLabel: '输入框1',
+              tagName: 'el-input',
+              modelKey: 'testInput1',
+              required: true,
+              attrs: {
+                placeholder: ''
+              }
+            }
+          ];
+        }
+      });
+      return {
+        formState
+      }
+    }
+  }).$mount('#app');
+</script>

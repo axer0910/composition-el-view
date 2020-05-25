@@ -28,6 +28,7 @@
   const app = new Vue({
     setup() {
       const formModel = reactive({});
+      // 新增useElFormRule，暴露若干el-form的验证方法，以及promise封装，错误对象的暴露
       const formRule = ref({
         region: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
