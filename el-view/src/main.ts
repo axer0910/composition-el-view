@@ -1,5 +1,5 @@
 import { VueConstructor } from 'vue';
-import { DialogFormView, DynamicForm, FormView } from './el-view-form';
+import { DialogFormView, DynamicForm, FormView, ElFormItemControl } from './el-view-form';
 import { Vue } from 'vue/types/vue';
 import { ElForm } from 'element-ui/types/form';
 
@@ -7,6 +7,7 @@ export const install = function(Vue: VueConstructor, opts = {}) {
   Vue.component('dynamic-form', DynamicForm);
   Vue.component('dialog-form', DialogFormView);
   Vue.component('form-view', FormView);
+  Vue.component('el-formitem-control', ElFormItemControl);
 };
 
 export * from './el-view-form'

@@ -26,7 +26,8 @@ export interface FormItem {
   attrs?: { [key: string]: any },
   events?: { [key: string]: Function },
   options?: ElOptionTag[] | VNodeChildren, // options可以传jsx，支持多个node
-  className?: string
+  className?: string,
+  labelWidth?: string
 }
 
 export type NullableFormItem = FormItem | null;
