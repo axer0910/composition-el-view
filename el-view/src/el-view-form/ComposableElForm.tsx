@@ -9,11 +9,11 @@
 // 表格：使用类似useElTable这样的写法
 
 import { CreateElement, VNode } from 'vue';
-import { FormItem } from './DynamicForm';
+import { FormItem, ValidateRule } from './DynamicForm';
 import {
   ComponentRenderProxy,
   computed,
-  defineComponent,
+  defineComponent, onMounted,
   ref,
   Ref,
   watch
@@ -23,16 +23,56 @@ import { ComponentContextData, RefComponentType } from '../main';
 import { getObjectValue, setObjectValue } from '../utils';
 import { createElFormItemUtils } from './CreateElFormItem';
 
-export const useElForm = (options: ElForm) => {
-  const elFormRef = ref(null);
-  watch(() => elFormRef.value, () => {
-    if (elFormRef.value) {
-      console.warn('mounted el form ref', elFormRef);
+interface UseElFormOption {
+  elFormRef: ElForm,
+  formModel: Ref<{[key: string]: any}>,
+  formRules?: Ref<ValidateRule[]>,
+}
+
+interface FormItemControlOption {
+  type?: string,
+  label?: string,
+  itemProps: {[key: string]: any},
+  itemAttrs: {[key: string]: any},
+  labelWidth: string,
+  // todo options也支持label和value的联动
+}
+
+type useControlState = UseElFormOption & FormItemControlOption;
+
+export const useElForm = (option: UseElFormOption) => {
+  const control = ref(null);
+  const { formModel, formRules, elFormRef } = option;
+  const hookArr: Ref<any[]> = ref([]);
+  watch(() => hookArr, () => {
+    console.warn('hook arr change', hookArr);
+  });
+  const useControl: (option: FormItemControlOption) => useControlState = (option: FormItemControlOption) => {
+    const { type, label, itemProps, itemAttrs, labelWidth } = option;
+
+    // arr.push()
+    onMounted(() => {
+      console.warn('in use control mounted', elFormRef);
+    });
+    return {
+      type,
+      label,
+      itemProps,
+      itemAttrs,
+      labelWidth,
+      formModel,
+      formRules,
+      elFormRef
+    }
+  };
+  watch(() => control.value, () => {
+    if (control.value) {
+      console.warn('mounted el form item control', control.value);
     }
   });
   // todo 将el-form-item替换为自定义的form-item组件，useElForm带出来一个register给到内部注册elForm的各种prop，验证等事件
   return {
-    elFormRef
+    useControl, formModel, formRules
     // validate: elForm.value.validate,
     // validateField: elForm.value.validateField,
     // resetFields: elForm.value.resetFields,
@@ -52,7 +92,7 @@ const buildFormItem = (context: ComponentContextData<typeof ElFormItemControl>) 
     attrs: itemAttrs,
     events: {},
     options: context.$slots.default as VNode[],
-    // todo class name
+    // todo class name, rules
   };
   return formItem;
 };
@@ -60,31 +100,27 @@ const buildFormItem = (context: ComponentContextData<typeof ElFormItemControl>) 
 export const ElFormItemControl = defineComponent({
   name: 'ElFormItemControl',
   props: {
-    itemType: String,
-    itemName: String,
-    itemLabel: String,
-    itemProps: Object,
-    itemAttrs: Object,
-    itemLabelWidth: {
-      type: String,
-      default: 'auto'
-    },
-    itemRules: {
-      type: Array,
-      default: () => []
-    }
+    type: String,
+    name: String,
+    label: String,
+    control: Object
   },
-  setup() {
+  setup(props) {
     const elFormItem: Ref<RefComponentType<ElForm>> = ref(null);
+    onMounted(() => {
+      // 从control解构配置，生成formItem
+    });
     return { elFormItem }
   },
   render(h: CreateElement) {
     const context = this as ComponentContextData<typeof ElFormItemControl>;
     console.warn(context);
-    const { createElFormItem } = createElFormItemUtils(context.props.f);
+    // const { createElFormItem } = createElFormItemUtils(context.props.f);
     const { type, label, itemProps, itemAttrs, labelWidth } = context.$props!;
     console.log('type is', type);
-    const vnodeData = getVNodeData(type + '', itemAttrs, itemProps, context.$slots.default);
-    return createElFormItem(); // todo formModel注册,rules注册
+    // const vnodeData = getVNodeData(type + '', itemAttrs, itemProps, context.$slots.default);
+    // return createElFormItem(); // todo formModel注册,rules注册
+    // todo promise提交
+    return <div>test</div>;
   }
 });

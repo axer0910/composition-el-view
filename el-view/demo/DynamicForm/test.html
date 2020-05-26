@@ -14,8 +14,8 @@
 <body>
   <div id="app">
     <el-form :model="formModel" :rules="rules" ref="elFormRef" label-width="100px" class="demo-ruleForm">
-      <el-formitem-control type="el-input" name="test_input" class="123-ss"></el-formitem-control>
-      <el-formitem-control type="el-select" name="test_select">
+      <el-formitem-control type="el-input" name="test_input" class="123-ss" :control="inputFormControl"></el-formitem-control>
+      <el-formitem-control type="el-select" name="test_select" :control="inputFormControl2">
         <el-option label="test1" value="1"></el-option>
         <el-option label="test2" value="2"></el-option>
       </el-formitem-control>
@@ -39,8 +39,26 @@
         ]
       });
       const createFormItemMethod = ref(() => {});
-      const { elFormRef } = useElForm({});
-      console.warn('el form ref', elFormRef);
+      const elFormRef = ref(null);
+      const { useControl } = useElForm({
+        elFormRef
+      });
+      const inputFormControl = useControl({
+        itemProps: {
+          disabled: true
+        },
+        itemAttrs: {
+          placeholder: 'is use Control placeholder'
+        }
+      });
+      const inputFormControl2 = useControl({
+        itemProps: {
+          disabled: true
+        },
+        itemAttrs: {
+          placeholder: 'is use Control placeholder'
+        }
+      });
       // let formOption = ref([
       //   {
       //     formLabel: '测试表单项',
@@ -55,7 +73,7 @@
       //   }
       // ]);
       return {
-        formModel, elFormRef, rules, createFormItemMethod
+        formModel, rules, createFormItemMethod, inputFormControl, inputFormControl2, elFormRef
       }
     }
   }).$mount('#app');
