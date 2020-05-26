@@ -1,5 +1,5 @@
 import { CompVNodeData, ElOptionTag, ElTagHandler, FormItem } from './DynamicForm';
-import { createElement } from '@vue/composition-api';
+import { ComponentRenderProxy, createElement } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '../utils';
 import { Vue } from 'vue/types/vue';
 import { VNode, VNodeData } from 'vue';
@@ -14,7 +14,7 @@ export const registerElTagHandlers = (tagName: string, elTagHandler: ElTagHandle
   elTagHandlers.set(tagName, elTagHandler);
 };
 
-export const createElFormItemUtils = (formModel: {[key: string]: any}, formItem: FormItem, context: Vue) => {
+export function createElFormItemUtils<Context extends Vue>(formModel: {[key: string]: any}, formItem: FormItem, context: Context) {
   const getBindProps = () => {
     let props: {[key: string]: any} = {};
     if (elTagHandlers.has(formItem.tagName)) {
@@ -59,11 +59,11 @@ export const createElFormItemUtils = (formModel: {[key: string]: any}, formItem:
         changeEventKey = 'input';
       }
       events[changeEventKey] = (val: any) => {
-        updateFormModel(val, formItem.modelKey, context);
+        updateFormModel(val, formItem.modelKey);
       };
       // 获取用户自定义绑定的事件对象（emitter为触发绑定的表单model更新函数）
       const emitter = (val: any) => {
-        updateFormModel(val, formItem.modelKey, context);
+        updateFormModel(val, formItem.modelKey);
       };
       const tagEventsHandler = elTagHandlers.get(formItem.tagName)!.formItemEvents;
       if (tagEventsHandler) {
@@ -76,13 +76,13 @@ export const createElFormItemUtils = (formModel: {[key: string]: any}, formItem:
     } else {
       return {
         input: (val: any) => {
-          updateFormModel(val, formItem.modelKey, context);
+          updateFormModel(val, formItem.modelKey);
         }
       };
     }
   };
 
-  const updateFormModel = (val: any, modelKey: string, context: Vue) => {
+  const updateFormModel = (val: any, modelKey: string) => {
     setObjectValue(formModel, modelKey, val);
     context.$emit('formChange', { ...formModel });
   };
@@ -121,7 +121,7 @@ export const createElFormItemUtils = (formModel: {[key: string]: any}, formItem:
     return options as VNode[];
   };
 
-  const createElFormItem = (formItem: FormItem) => {
+  const createElFormItem = () => {
     const { tagName, props, attrs, events, modelKey, formLabel } = formItem;
     const componentTagName = tagName;
     const componentOption: VNodeData = {
