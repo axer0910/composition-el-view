@@ -1,5 +1,5 @@
 import { CompVNodeData, ElOptionTag, ElTagHandler, FormItem } from './DynamicForm';
-import { ComponentRenderProxy, createElement } from '@vue/composition-api';
+import { createElement, Ref } from '@vue/composition-api';
 import { getObjectValue, setObjectValue } from '../utils';
 import { Vue } from 'vue/types/vue';
 import { VNode, VNodeData } from 'vue';
@@ -81,7 +81,6 @@ export function createElFormItemUtils<Context extends Vue>(formModel: {[key: str
       };
     }
   };
-
   const updateFormModel = (val: any, modelKey: string) => {
     setObjectValue(formModel, modelKey, val);
     context.$emit('formChange', { ...formModel });
@@ -134,8 +133,9 @@ export function createElFormItemUtils<Context extends Vue>(formModel: {[key: str
     mergeProps(componentOption);
     const slots = setComponentSlot();
     const h = context.$createElement;
+    // elFormItemRef名字和setup返回的ref需要保持一致，一致会自动设置ref变量
     return (
-      <el-form-item label={formLabel} class={['dy-form-item', formItem.className]} prop={formItem.modelKey}>
+      <el-form-item label={formLabel} class={['dy-form-item', formItem.className]} prop={formItem.modelKey} ref="elFormItemRef">
         {createFormItemVNode({
           tagName: componentTagName,
           componentOption,
@@ -148,4 +148,4 @@ export function createElFormItemUtils<Context extends Vue>(formModel: {[key: str
   return {
     createElFormItem
   }
-};
+}

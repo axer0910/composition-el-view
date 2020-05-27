@@ -13,13 +13,13 @@
 </head>
 <body>
   <div id="app">
-    <el-form :model="formModel" :rules="rules" ref="elFormRef" label-width="100px" class="demo-ruleForm">
-      <el-formitem-control type="el-input" name="test_input" class="123-ss" :control="inputFormControl"></el-formitem-control>
-      <el-formitem-control type="el-select" name="test_select" :control="inputFormControl2">
-        <el-option label="test1" value="1"></el-option>
-        <el-option label="test2" value="2"></el-option>
+    <el-form-control :form-control="formControl">
+      <el-formitem-control type="el-input" name="inputVal" class="123-ss" :control="inputFormControl"></el-formitem-control>
+      <el-formitem-control type="el-select" name="selectVal" :control="inputFormControl2">
+        <el-option label="表单项1" value="1"></el-option>
+        <el-option label="表单项2" value="2"></el-option>
       </el-formitem-control>
-    </el-form>
+    </el-form-control>
   </div>
 </body>
 </html>
@@ -30,50 +30,36 @@
   const { useElForm } = window.compositionElViewForm;
   const app = new Vue({
     setup() {
-      const formModel = ref(reactive({
-        testInput: '111'
-      }));
-      const rules = ref({
-        name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
-        ]
-      });
-      const createFormItemMethod = ref(() => {});
       const elFormRef = ref(null);
-      const { useControl } = useElForm({
-        elFormRef
+      const { useItemControl, formControl } = useElForm({
+        elFormRef,
+        formModel: {
+          inputVal: '123',
+          selectVal: ''
+        }
       });
-      const inputFormControl = useControl({
+      const inputFormControl = useItemControl({
         itemProps: {
-          disabled: true
+          disabled: false
         },
         itemAttrs: {
           placeholder: 'is use Control placeholder'
         }
       });
-      const inputFormControl2 = useControl({
+      const inputFormControl2 = useItemControl({
         itemProps: {
-          disabled: true
+          disabled: false
         },
         itemAttrs: {
           placeholder: 'is use Control placeholder'
         }
       });
-      // let formOption = ref([
-      //   {
-      //     formLabel: '测试表单项',
-      //     tagName: 'el-input',
-      //     modelKey: 'test2',
-      //     props: {
-      //       type: 'text'
-      //     },
-      //     attrs: {
-      //       placeholder: '测试表单项'
-      //     }
-      //   }
-      // ]);
+      onMounted(() => {
+        console.warn('mount el form control', formControl.elFormRef);
+        console.warn('elFormItemRef 2', inputFormControl2.elFormItemRef.clearValidate());
+      });
       return {
-        formModel, rules, createFormItemMethod, inputFormControl, inputFormControl2, elFormRef
+        inputFormControl, inputFormControl2, formControl
       }
     }
   }).$mount('#app');
