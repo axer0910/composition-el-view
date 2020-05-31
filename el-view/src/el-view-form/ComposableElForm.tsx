@@ -11,8 +11,7 @@
 import { CreateElement, VNode } from 'vue';
 import { FormItem, ValidateRule } from './DynamicForm';
 import {
-  ComponentRenderProxy,
-  defineComponent, onMounted,
+  defineComponent,
   ref,
   Ref,
   watch
@@ -20,6 +19,7 @@ import {
 import { ElForm } from 'element-ui/types/form';
 import { createElFormItemUtils } from './CreateElFormItem';
 import { ComponentProxyType, RefComponentType } from '../main';
+import { ElPropMapKeys, MapElPropsAttributes } from './MapElTypes';
 
 interface UseElFormOption {
   elFormRef: ElForm,
@@ -27,30 +27,33 @@ interface UseElFormOption {
   formRules?: Ref<ValidateRule[]>,
 }
 
-interface FormItemControlOption {
-  type?: string,
+interface FormItemControlOption<TagName extends string> {
+  type?: TagName,
   label?: string,
-  itemProps: {[key: string]: any},
+  itemProps: MapElPropsAttributes<TagName extends ElPropMapKeys ? TagName : ''>,
   itemAttrs: {[key: string]: any},
   labelWidth: string,
   // todo options也支持label和value的联动
 }
 
-interface ElFormItemControlProps {
+interface ElFormItemControlProps<TagName extends ElPropMapKeys > {
   type: string,
   name: string,
   label: string,
-  control: UseControlState
+  control: UseControlState<TagName>
 }
 
-type UseControlState = UseElFormOption & FormItemControlOption;
+type UseControlState<TagName extends string> = UseElFormOption & FormItemControlOption<TagName>;
 
-type ComponentContext = ComponentProxyType<ElFormItemControlProps>;
+type ComponentContext = ComponentProxyType<ElFormItemControlProps<''>>;
 
-export const useElForm = (option: UseElFormOption) => {
+type UseControlFn = <TagName extends string>(option: FormItemControlOption<TagName>)
+  => UseControlState<TagName>
+
+function useElForm(option: UseElFormOption) {
   const control = ref(null);
   const { formModel, formRules, elFormRef } = option;
-  const useControl: (option: FormItemControlOption) => UseControlState = (option: FormItemControlOption) => {
+  const useControl: UseControlFn = (option) => {
     const { type, label, itemProps, itemAttrs, labelWidth } = option;
     return {
       type,
@@ -71,7 +74,7 @@ export const useElForm = (option: UseElFormOption) => {
   return {
     useControl, formModel, formRules
   }
-};
+}
 
 const buildFormItem = (context: ComponentContext) => {
   const { name, type, label, control } = context.$props;
