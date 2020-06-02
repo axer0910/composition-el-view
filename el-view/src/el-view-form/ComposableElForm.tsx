@@ -21,22 +21,23 @@ import { createElFormItemUtils } from './CreateElFormItem';
 import { ComponentProxyType, DialogFormView, RefComponentType } from '../main';
 import { ComponentInstance } from '@vue/composition-api/dist/component';
 import { ElFormItem } from 'element-ui/types/form-item';
+import { ElPropMapKeys, MapElPropsAttributes } from './MapElTypes';
 
 // todo 映射elform上面的props类型到formProps上面
 
 interface UseElFormOption {
   elFormRef: ElForm,
-  formModel: {[key: string]: any},
-  formRules?: ValidateRule[],
+  formModel: Ref<{[key: string]: any}>,
+  formRules?: Ref<ValidateRule[]>,
   formProps?: {[key: string]: any},
   formAttrs?: {[key: string]: any},
   onValidate?: () => void
 }
 
-interface FormItemControlOption {
-  type?: string,
+interface FormItemControlOption<TagName extends string> {
+  type?: TagName,
   label?: string,
-  itemProps: {[key: string]: any},
+  itemProps: MapElPropsAttributes<TagName extends ElPropMapKeys ? TagName : ''>,
   itemAttrs: {[key: string]: any},
   labelWidth: string,
   // todo options也支持label和value的联动
@@ -55,20 +56,25 @@ interface ElFormItemControlProps {
   type: string,
   name: string,
   label: string,
-  control: ElFormItemControlState
+  control: ElFormItemControlState<''>
 }
 
-interface ElFormItemControlState {
+interface ElFormItemControlState<TagName extends string> {
   type?: string,
   label?: string,
-  itemProps: {[key: string]: any},
+  itemProps: MapElPropsAttributes<TagName extends ElPropMapKeys ? TagName : ''>,
   itemAttrs: {[key: string]: any},
   labelWidth: string,
   formModel: {[key: string]: any},
   formRules?: {[key: string]: any},
   elFormItemRef: ElFormItem | {}
 }
-type useItemControlFn = (option: FormItemControlOption) => ElFormItemControlState
+
+type UseControlState<TagName extends string> = UseElFormOption & FormItemControlOption<TagName>;
+
+type ComponentContext = ComponentProxyType<ElFormItemControlProps>;
+
+type useItemControlFn = <TagName extends string>(option: FormItemControlOption<TagName>) => ElFormItemControlState<TagName>
 
 type FormItemComponentContext = ComponentProxyType<ElFormItemControlProps, { elFormItem: Ref<RefComponentType<ElForm>> }>;
 type FormComponentContext = ComponentProxyType<ElFormControlProps>;
@@ -92,7 +98,7 @@ export const useElForm = (option: UseElFormOption) => {
       elFormRef
     });
   };
-  const useItemControl: useItemControlFn = (option: FormItemControlOption) => {
+  const useItemControl: useItemControlFn = (option) => {
     const { type, label, itemProps, itemAttrs, labelWidth } = option;
     let elFormItemRef: ElFormItem | {} = {};
     return {
@@ -108,7 +114,6 @@ export const useElForm = (option: UseElFormOption) => {
   };
   const formControl = buildFormControl();
   // formItem也解构formItem上的方法
-  console.warn('after build control', formControl);
   return {
     useItemControl, formControl
   }
@@ -120,7 +125,7 @@ const buildFormItem = (context: FormItemComponentContext) => {
   const {
     type: formType,
     label: formItemLabel,
-    itemProps, // todo 映射
+    itemProps,
     itemAttrs,
     labelWidth,
     formModel,
@@ -178,7 +183,6 @@ export const ElFormControl = defineComponent({
   },
   render(h: CreateElement) {
     const context = this as FormComponentContext;
-    console.warn('control prpos', context.$props);
     const option = {
       attrs: context.$props.formControl.formAttrs,
       props: context.$props.formControl.formProps,

@@ -124,11 +124,11 @@ const getBindEvents = (formItem: FormItem) => {
       changeEventKey = 'input';
     }
     events[changeEventKey] = (val: any) => {
-      emitFormChange(val, formItem.modelKey);
+      // emitFormChange(val, formItem.modelKey);
     };
     // 获取用户自定义绑定的事件对象（emitter为触发绑定的表单model更新函数）
     const emitter = (val: any) => {
-      emitFormChange(val, formItem.modelKey);
+      // emitFormChange(val, formItem.modelKey);
     };
     const tagEventsHandler = elTagHandlers.get(formItem.tagName)!.formItemEvents;
     if (tagEventsHandler) {
@@ -141,7 +141,7 @@ const getBindEvents = (formItem: FormItem) => {
   } else {
     return {
       input: (val: any) => {
-        emitFormChange(val, formItem.modelKey);
+        // emitFormChange(val, formItem.modelKey);
       }
     };
   }
