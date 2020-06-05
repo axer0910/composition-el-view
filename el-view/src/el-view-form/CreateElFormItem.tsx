@@ -134,8 +134,15 @@ export function createElFormItemUtils<Context extends Vue>(formModel: {[key: str
     const slots = setComponentSlot();
     const h = context.$createElement;
     // elFormItemRef名字和setup返回的ref需要保持一致，一致会自动设置ref变量
+    console.log('build el form item', formLabel);
     return (
-      <el-form-item label={formLabel} class={['dy-form-item', formItem.className]} prop={formItem.modelKey} ref="elFormItemRef">
+      <el-form-item label={formLabel}
+                    class={['dy-form-item', formItem.className]}
+                    prop={formItem.modelKey}
+                    error={formItem.errorMsg}
+                    rules={formItem.formRules}
+                    ref="elFormItemRef"
+      >
         {createFormItemVNode({
           tagName: componentTagName,
           componentOption,

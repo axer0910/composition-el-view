@@ -14,11 +14,12 @@
 <body>
   <div id="app">
     <el-form-control :form-control="formControl">
-      <el-formitem-control type="el-input" name="inputVal" class="123-ss" :control="inputFormControl"></el-formitem-control>
-      <el-formitem-control type="el-select" name="selectVal" :control="inputFormControl2">
+      <el-formitem-control label="测试1" type="el-input" name="inputVal" :control="inputFormControl"></el-formitem-control>
+      <el-formitem-control label="测试2" type="el-select" name="selectVal" :control="inputFormControl2">
         <el-option label="表单项1" value="1"></el-option>
         <el-option label="表单项2" value="2"></el-option>
       </el-formitem-control>
+      <el-button @click="submitForm">提交表单</el-button>
     </el-form-control>
   </div>
 </body>
@@ -26,16 +27,17 @@
 <script>
   Vue.use(window.vueCompositionApi.default);
   Vue.use(window.compositionElViewForm);
-  const { reactive, ref, onMounted } = window.vueCompositionApi;
+  const { ref, onMounted } = window.vueCompositionApi;
   const { useElForm } = window.compositionElViewForm;
   const app = new Vue({
     setup() {
-      const elFormRef = ref(null);
-      const { useItemControl, formControl } = useElForm({
-        elFormRef,
+      const { formControl, useItemControl, submitForm } = useElForm({
         formModel: {
           inputVal: '123',
           selectVal: ''
+        },
+        onRuleValidateSuccess(model) {
+          console.log('model success now', model);
         }
       });
       const inputFormControl = useItemControl({
@@ -43,8 +45,11 @@
           disabled: false
         },
         itemAttrs: {
-          placeholder: 'is use Control placeholder'
-        }
+          placeholder: 'is use Control1 placeholder'
+        },
+        formRules: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' }
+        ]
       });
       const inputFormControl2 = useItemControl({
         itemProps: {
@@ -55,11 +60,11 @@
         }
       });
       onMounted(() => {
-        console.warn('mount el form control', formControl.elFormRef);
-        console.warn('elFormItemRef 2', inputFormControl2.elFormItemRef.clearValidate());
+        console.warn('mount el form control', formControl.elFormRef.value);
+        console.warn('elFormItemRef 2', inputFormControl2.elFormItemRef.value.clearValidate());
       });
       return {
-        inputFormControl, inputFormControl2, formControl
+        inputFormControl, inputFormControl2, formControl, submitForm
       }
     }
   }).$mount('#app');

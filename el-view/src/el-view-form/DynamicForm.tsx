@@ -27,7 +27,11 @@ export interface FormItem {
   events?: { [key: string]: Function },
   options?: ElOptionTag[] | VNodeChildren, // options可以传jsx，支持多个node
   className?: string,
-  labelWidth?: string
+  labelWidth?: string,
+  errorMsg?: string, // 手动设置错误信息
+  showMessage?:boolean,
+  inlineMessage?: boolean,
+  size?: 'medium' | 'small' | 'mini'
 }
 
 export type NullableFormItem = FormItem | null;
